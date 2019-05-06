@@ -47,6 +47,7 @@ void ESC::setSpeed(int _speed){
 
 void ESC::brakeMotor(){
     servo.writeMicroseconds(brake_micros);
+    speed = 123;
 }
 
 void ESC::setMaxThrottleMicros(int in){
