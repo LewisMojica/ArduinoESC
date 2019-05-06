@@ -30,12 +30,8 @@ void ESC::setSpeed(int _speed){
         reverse_status = false;
     } else if(_speed < 0 && _speed >= -100 ){
         if(reverse_status == false){
-            brakeMotor();
-            delay(100);
-
-
             servo.writeMicroseconds(1500);
-            delay(25);
+            delay(125);
             servo.writeMicroseconds(1400);
             delay(25);
             servo.writeMicroseconds(1500);
