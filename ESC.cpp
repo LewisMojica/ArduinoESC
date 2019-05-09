@@ -46,7 +46,13 @@ void ESC::setSpeed(int _speed){
 }
 
 void ESC::brakeMotor(){
-    servo.writeMicroseconds(brake_micros);
+    if(reverse_status == false)
+        servo.writeMicroseconds(brake_micros);
+    else{
+        servo.writeMicroseconds(min_throttle);
+        delay(100);
+        servo.writeMicroseconds(brake_micros);
+    }
     speed = 123;
 }
 
