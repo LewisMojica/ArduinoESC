@@ -20,28 +20,36 @@ void ESC::writeMicroseconds(int micro_seg){
 
 void ESC::setSpeed(int _speed){
 
-    if(_speed == 0){
-        servo.writeMicroseconds(neutral_micros);
-    }else if (_speed > 0 && _speed <= 100){
-        if(speed < 0)
-            delay(200);
+    if(_speed >= 1 && _speed <= 100){
+        if(reverse_status == true && speed < neutral_micros){
+            servo.writeMicroseconds(neutral_micros);
+             delay(400);
+        }
+
         servo.writeMicroseconds(map(_speed,1,100,min_throttle,max_throttle));
         speed = _speed;
         reverse_status = false;
-    } else if(_speed < 0 && _speed >= -100 ){
-        if(reverse_status == false){
-            servo.writeMicroseconds(1500);
-            delay(125);
-            servo.writeMicroseconds(1400);
-            delay(25);
-            servo.writeMicroseconds(1500);
-            delay(25);
-            servo.writeMicroseconds(map(_speed,-100,-1,max_reverse_micros,min_reverse_micros));
 
+    } else if(_speed <= -1 && _speed >= -100){
+        if (reverse_status == false){
+            if (speed != neutral_micros){
+                servo.writeMicroseconds(neutral_micros);    
+                delay(300);
+            }
+            servo.writeMicroseconds(min_reverse_micros);
+            delay(200);
+            servo.writeMicroseconds(neutral_micros);
+            delay(200);
+            servo.writeMicroseconds(map(_speed,-1,-100,min_reverse_micros,max_reverse_micros));
+            speed = _speed;
             reverse_status = true;
-        }else{
-            servo.writeMicroseconds(map(_speed,-100,-1,max_reverse_micros,min_reverse_micros));
+        } else{
+            servo.writeMicroseconds(map(_speed,-1,-100,min_reverse_micros,max_reverse_micros));
+            speed = _speed;
         }
+    } else {
+        servo.writeMicroseconds(neutral_micros);
+        speed = neutral_micros;
     }
 }
 
@@ -54,6 +62,22 @@ void ESC::brakeMotor(){
         servo.writeMicroseconds(brake_micros);
     }
     speed = 123;
+}
+
+void ESC::enableReverse(){
+    if (reverse_status == false){
+        if (speed != neutral_micros){
+            servo.writeMicroseconds(neutral_micros);    
+            delay(300);
+        }   
+        servo.writeMicroseconds(min_reverse_micros);
+        delay(200);
+        servo.writeMicroseconds(neutral_micros);
+        delay(200);
+        reverse_status = true;
+    }
+    
+    
 }
 
 void ESC::setMaxThrottleMicros(int in){

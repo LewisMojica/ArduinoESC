@@ -37,6 +37,7 @@ class ESC
     void setMinReverseMicros(int);
     void setMaxReverseMicros(int);
 
+    void enableReverse();
 
     int getSpeed();
 };
